@@ -1,0 +1,1263 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta http-equiv="Cache-Control" content="no-cache, must-revalidate">
+<title>Growth Audit — Wakie</title>
+<link rel="icon" href="img/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme: only dark;
+  /* ---- Wakie, extracted from their live screens ---- */
+  --wk-night:#2C266C; --wk-night2:#4E4C86; --wk-field:rgba(37,33,92,.62); --wk-modal:#3B3960; --wk-modal2:#2F2D52;
+  --wk-orange:#FF9700; --wk-pink:#EB407A; --wk-ink:#FFFFFF; --wk-txt:rgba(255,255,255,.82); --wk-muted:rgba(255,255,255,.55);
+  --wk-pay:#000000; --wk-plan:#000000; --wk-planline:#2C2C2E; --wk-sel:#2A2111; --wk-badge:#F5AA2B; --wk-toggle:#65C466;
+  --wk-row:rgba(255,255,255,.12); --wk-cta:#FFFFFF; --wk-cta-ink:#000000;
+  --r-ctl:22px; --r-media:28px;
+  /* ---- the report shell, in Wakie's own palette ---- */
+  --bg:#1C1846; --bg2:#241F5A; --surf:#272263;
+  --hair:rgba(255,255,255,.10); --hair2:rgba(255,255,255,.18);
+  --ink:#FFFFFF; --ink2:#C9C6E6; --ink3:#8E8ABA;
+  --accent:#FF9700; --accent-lift:#FFB547;
+  --panel:#FFFFFF; --panel-ink:#17143A; --panel-muted:#5F5C7A; --panel-line:#E8E6F0;
+  --accent-ink:#B35C00;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+a{color:inherit}
+.wrap{max-width:1080px;margin:0 auto;padding:0 32px}
+@media(max-width:700px){.wrap{padding:0 20px}}
+
+/* ============ top bar ============ */
+.nav{position:sticky;top:0;z-index:70;background:rgba(28,24,70,.86);backdrop-filter:blur(18px) saturate(160%);
+  border-bottom:1px solid var(--hair)}
+.nav-in{max-width:1080px;margin:0 auto;padding:0 32px;height:58px;display:flex;align-items:center;gap:18px}
+@media(max-width:700px){.nav-in{padding:0 16px;gap:12px}}
+.nav-brand{display:flex;align-items:center;gap:9px;font-size:13.5px;font-weight:600;letter-spacing:-.01em}
+.nav-brand img{width:26px;height:26px;border-radius:7px;display:block;flex:none}
+.nav-brand span{color:var(--ink2);font-weight:500}
+.nav-brand b{color:var(--ink);font-weight:600}
+.nav-links{margin-left:auto;display:flex;gap:2px;align-items:center}
+.nav-links button{padding:7px 14px;border-radius:8px;font-size:13px;font-weight:600;color:var(--ink3);transition:.16s}
+.nav-links button:hover{color:var(--ink)}
+.nav-links button.on{color:var(--ink);background:rgba(255,255,255,.1)}
+@media(max-width:640px){.nav-brand span{display:none}}
+
+.view{display:none}
+.view.on{display:block}
+
+/* ============ hero ============ */
+.hero{padding:104px 0 0;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-340px;left:50%;transform:translateX(-50%);
+  width:1100px;height:640px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(closest-side,rgba(255,151,0,.20),transparent 72%)}
+.hero::after{content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(40% 50% at 8% 20%,rgba(107,117,180,.35),transparent 70%),
+   radial-gradient(38% 45% at 92% 18%,rgba(193,106,115,.28),transparent 70%)}
+.hero>*{position:relative;z-index:1}
+.eyebrow{font-size:11.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-lift);margin-bottom:26px}
+.hero h1{font-size:76px;line-height:.98;font-weight:700;letter-spacing:-.045em;margin:0 0 24px}
+@media(max-width:820px){.hero h1{font-size:50px}.hero{padding-top:70px}}
+.hero .lede{font-size:20px;line-height:1.5;font-weight:400;color:var(--ink2);max-width:660px;margin:0 auto;letter-spacing:-.012em}
+@media(max-width:820px){.hero .lede{font-size:17px}}
+.hero .meta{margin-top:30px;font-size:12.5px;color:var(--ink3);letter-spacing:.02em}
+.hero .meta b{color:var(--ink2);font-weight:600}
+
+.stats{display:flex;justify-content:center;gap:0;margin:70px auto 0;max-width:760px;
+  border-top:1px solid var(--hair);border-bottom:1px solid var(--hair)}
+.stat{flex:1;padding:26px 14px;text-align:center;border-left:1px solid var(--hair)}
+.stat:first-child{border-left:none}
+.stat b{display:block;font-size:26px;font-weight:700;letter-spacing:-.03em;color:var(--ink)}
+.stat span{display:block;font-size:11.5px;color:var(--ink3);margin-top:5px;line-height:1.35}
+@media(max-width:700px){.stat b{font-size:19px}.stat{padding:18px 8px}}
+
+.fb{max-width:760px;margin:0 auto;padding:30px 0 0;display:grid;grid-template-columns:1fr 1fr;gap:26px;text-align:left}
+@media(max-width:700px){.fb{grid-template-columns:1fr;gap:20px;padding-top:24px}}
+.fb-k{grid-column:1/-1;font-size:10.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ink3);text-align:center;margin-bottom:-6px}
+.fb-i{display:flex;gap:12px;align-items:flex-start}
+.fb-i .tick{width:18px;height:18px;flex:none;margin-top:3px;border-radius:50%;background:rgba(255,151,0,.18);
+  display:grid;place-items:center}
+.fb-i .tick svg{width:10px;height:10px;stroke:var(--accent-lift);stroke-width:3;fill:none;
+  stroke-linecap:round;stroke-linejoin:round}
+.fb-i p{font-size:14px;line-height:1.55;color:var(--ink2);margin:0}
+.fb-i p b{color:var(--ink);font-weight:700}
+
+.sec{padding:96px 0}
+.sec-k{font-size:11.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--ink3);margin-bottom:18px}
+.sec h2{font-size:38px;line-height:1.14;font-weight:700;letter-spacing:-.035em;margin:0 0 20px;max-width:680px}
+@media(max-width:820px){.sec h2{font-size:29px}.sec{padding:64px 0}}
+.sec p.body{font-size:17px;line-height:1.66;color:var(--ink2);max-width:640px;margin:0 0 18px;letter-spacing:-.008em}
+.sec p.body b{color:var(--ink);font-weight:600}
+.rule{height:1px;background:var(--hair);margin:0}
+
+.notes{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:40px;max-width:820px}
+@media(max-width:760px){.notes{grid-template-columns:1fr}}
+.note{background:var(--surf);border:1px solid var(--hair);border-radius:16px;padding:24px 26px}
+.note h4{font-size:15px;font-weight:700;letter-spacing:-.015em;margin:0 0 8px}
+.note p{font-size:14px;line-height:1.6;color:var(--ink2);margin:0}
+
+.ideas{display:flex;flex-direction:column;gap:0;margin-top:14px;border-top:1px solid var(--hair)}
+.idea{display:grid;grid-template-columns:52px 1fr 190px;gap:26px;align-items:start;
+  padding:30px 4px;border-bottom:1px solid var(--hair);text-align:left;width:100%;transition:.18s}
+.idea:hover{background:rgba(255,255,255,.04)}
+@media(max-width:780px){.idea{grid-template-columns:38px 1fr;gap:16px}}
+.idea .no{font-size:13px;font-weight:700;color:var(--ink3);padding-top:4px;letter-spacing:.02em}
+.idea h3{font-size:21px;line-height:1.25;font-weight:700;letter-spacing:-.024em;margin:0 0 7px}
+@media(max-width:820px){.idea h3{font-size:18px}}
+.idea p{font-size:14.5px;line-height:1.6;color:var(--ink2);margin:0;max-width:540px}
+.idea .out{text-align:right;padding-top:3px}
+@media(max-width:780px){.idea .out{grid-column:2;text-align:left;padding-top:12px}}
+.idea .out b{display:block;font-size:19px;font-weight:700;letter-spacing:-.025em;color:var(--accent-lift);white-space:nowrap}
+.idea .out span{display:block;font-size:10.5px;color:var(--ink3);margin-top:3px;letter-spacing:.04em;text-transform:uppercase;font-weight:600}
+.idea .seeit{display:inline-flex;align-items:center;gap:5px;margin-top:11px;font-size:12.5px;
+  font-weight:600;color:var(--accent-lift)}
+.idea .seeit svg{width:12px;height:12px}
+
+.band{background:var(--surf);border:1px solid var(--hair);border-radius:28px;padding:40px 44px;margin-top:44px;
+  display:flex;align-items:center;gap:36px;flex-wrap:wrap}
+@media(max-width:700px){.band{padding:28px 24px;gap:22px}}
+.band .lab{font-size:11.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);margin-bottom:10px}
+.band .txt{flex:1;min-width:240px}
+.band .txt p{font-size:15.5px;line-height:1.6;color:var(--ink2);margin:0}
+.band .nums{display:flex;gap:34px}
+.band .nums div b{display:block;font-size:30px;font-weight:700;letter-spacing:-.035em;color:var(--accent-lift)}
+.band .nums div span{display:block;font-size:11px;color:var(--ink3);margin-top:2px;letter-spacing:.04em;
+  text-transform:uppercase;font-weight:600}
+
+.cta-row{display:flex;justify-content:center;margin-top:52px;align-items:center;gap:22px;flex-wrap:wrap}
+.bigbtn{display:inline-flex;align-items:center;gap:9px;background:var(--accent);color:#fff;
+  font-size:15px;font-weight:700;letter-spacing:-.01em;padding:15px 26px;border-radius:30px;transition:.16s}
+.bigbtn:hover{filter:brightness(1.08)}
+.bigbtn svg{width:15px;height:15px}
+
+.foot{border-top:1px solid var(--hair);padding:36px 0 70px;font-size:12.5px;line-height:1.6;color:var(--ink3)}
+
+/* ============ prototype stage ============ */
+.stage{display:grid;grid-template-columns:minmax(440px,1fr) minmax(400px,470px);gap:0;
+  align-items:start;min-height:calc(100vh - 58px)}
+@media(max-width:1080px){.stage{grid-template-columns:1fr}}
+.phonecol{padding:34px 24px 46px;display:flex;flex-direction:column;align-items:center;gap:18px}
+.panelcol{border-left:1px solid var(--hair);background:var(--panel);color:var(--panel-ink);
+  min-height:calc(100vh - 58px);position:sticky;top:58px;max-height:calc(100vh - 58px);overflow-y:auto}
+@media(max-width:1080px){.panelcol{position:static;max-height:none;border-left:none;border-top:1px solid var(--hair)}}
+
+.phone{position:relative;width:390px;height:844px;flex:none;background:#000;border:11px solid #000;
+  border-radius:46px;box-shadow:0 0 0 1.5px #3E3980,0 34px 70px -22px rgba(0,0,0,.6)}
+.phone-in{position:absolute;inset:0;border-radius:36px;overflow:hidden;background:var(--wk-night);color-scheme:only dark}
+.island{position:absolute;top:9px;left:50%;transform:translateX(-50%);width:104px;height:30px;background:#000;
+  border-radius:16px;z-index:60;pointer-events:none}
+.sbar{position:absolute;top:0;left:0;right:0;height:50px;z-index:55;pointer-events:none;display:flex;direction:ltr;
+  align-items:center;justify-content:space-between;padding:14px 28px 0 34px;font:600 15px/1 'Inter',sans-serif;color:#fff;transition:color .3s}
+.sbar.dk{color:#111}
+.sbar .glyphs{display:flex;gap:5px;align-items:center}
+.homebar{position:absolute;bottom:7px;left:50%;transform:translateX(-50%);width:134px;height:5px;
+  border-radius:3px;background:rgba(255,255,255,.92);z-index:56;pointer-events:none;transition:background .3s}
+.homebar.dk{background:#111}
+.screenwrap{position:absolute;inset:0;overflow:hidden;background:var(--wk-night)}
+
+/* ============ phone screens — Wakie's system, all prefixed scr-/wk- ============ */
+.scr{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--wk-night);color:var(--wk-ink);
+  font-family:'Inter',-apple-system,sans-serif;
+  transform:translateX(100%);transition:transform .36s cubic-bezier(.32,.72,0,1);z-index:10;will-change:transform}
+[dir=rtl] .scr{font-family:'Noto Sans Arabic','Inter',sans-serif}
+.scr.is-active{transform:translateX(0);z-index:20}
+.scr.is-past{transform:translateX(-24%)}
+.scr.sheet{transform:translateY(100%)}
+.scr.sheet.is-active{transform:translateY(0);z-index:30}
+.scr.nofx{transition:none}
+.scr-top{flex:none;padding:56px 24px 0;position:relative;z-index:2}
+.scr-body{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;padding:0 24px;scrollbar-width:none;position:relative;z-index:2}
+.scr-body::-webkit-scrollbar{display:none}
+.scr-body.dock{display:flex;flex-direction:column}
+.scr-foot{flex:none;padding:12px 24px 30px;position:relative;z-index:2}
+
+/* their illustrated night-city scene, dimmed on every onboarding step */
+.wk-scene{position:absolute;inset:0;z-index:0;background:#3F1857 url(img/scene.jpg) center top/cover no-repeat}
+.wk-dim{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(42,36,108,.9),rgba(66,62,128,.86) 60%,rgba(72,60,120,.84))}
+.wk-dim.deep{background:rgba(16,14,30,.72)}
+.wk-back{width:36px;height:40px;display:grid;place-items:center;color:rgba(255,255,255,.6);margin-left:-10px}
+.wk-back svg{width:22px;height:22px}
+[dir=rtl] .wk-back{margin-left:0;margin-right:-10px;transform:scaleX(-1)}
+.wk-h{font-size:27px;line-height:1.25;font-weight:500;letter-spacing:-.01em;text-align:center;margin:26px 0 0;color:var(--wk-ink)}
+.wk-h em{font-style:normal;color:var(--wk-orange)}
+.wk-sub{font-size:14.5px;line-height:1.45;color:var(--wk-muted);text-align:center;margin:10px 0 0}
+.wk-btn{display:block;width:100%;height:58px;border-radius:29px;background:var(--wk-orange);color:#fff;
+  font:500 19px/1 'Inter',sans-serif;transition:filter .15s}
+[dir=rtl] .wk-btn{font-family:'Noto Sans Arabic','Inter',sans-serif}
+.wk-btn:hover{filter:brightness(1.05)}
+.wk-btn[disabled]{background:#7C6A5A;color:rgba(255,255,255,.6);cursor:default}
+.wk-ghost{display:block;width:100%;height:44px;margin-top:6px;font:500 16px/1 inherit;color:var(--wk-muted)}
+
+/* welcome */
+.scr--welcome .wk-dim{display:none}
+.wk-wh{font-size:33px;line-height:1.15;font-weight:700;letter-spacing:-.02em;text-align:center;color:#fff;margin:180px 0 0;text-shadow:0 1px 10px rgba(30,20,80,.25)}
+.wk-ws{font-size:15.5px;line-height:1.35;text-align:center;color:#fff;margin:12px 6px 0;font-weight:500;text-shadow:0 1px 8px rgba(30,20,80,.3)}
+.scr--welcome .wk-btn{margin-top:26px}
+.wk-have{display:block;margin:200px auto 0;font:700 15px/1 inherit;color:#3A2A3F;text-decoration:underline;text-underline-offset:3px}
+
+/* rules modal */
+.wk-modal{background:var(--wk-modal);border-radius:16px;padding:26px 16px 16px;margin:150px 0 0}
+.wk-modal h3{font-size:25px;line-height:1.25;font-weight:500;text-align:center;color:#fff}
+.wk-modal p{font-size:15px;line-height:1.45;color:rgba(255,255,255,.9);margin:18px 2px 0}
+.wk-modal u{text-underline-offset:2px;font-weight:600}
+.wk-modal .wk-btn{margin-top:26px;font-weight:700;font-size:20px}
+.wk-modal .wk-cancel{display:block;width:100%;height:58px;border-radius:29px;background:var(--wk-modal2);margin-top:14px;font:500 18px/1 inherit;color:#fff}
+
+/* talk-about rows */
+.wk-rows{display:flex;flex-direction:column;gap:10px;margin-top:24px}
+.wk-row{display:flex;align-items:center;gap:13px;width:100%;text-align:start;background:var(--wk-field);border:2px solid transparent;
+  border-radius:var(--r-ctl);padding:14px 16px;font:500 16px/1.3 inherit;color:#fff;transition:.16s}
+.wk-row .em{font-size:20px;width:26px;text-align:center;flex:none}
+.wk-row span.l{flex:1}
+.wk-row.on{border-color:var(--wk-orange);background:rgba(255,151,0,.14)}
+.wk-ck{width:24px;height:24px;flex:none;border-radius:50%;border:2px solid rgba(255,255,255,.45);display:grid;place-items:center;transition:.16s}
+.wk-ck svg{width:13px;height:13px;stroke:#fff;stroke-width:3.2;fill:none;stroke-linecap:round;stroke-linejoin:round;opacity:0}
+.wk-row.on .wk-ck{background:var(--wk-orange);border-color:var(--wk-orange)}
+.wk-row.on .wk-ck svg{opacity:1}
+
+/* gender — their two circles */
+.wk-gender{display:flex;justify-content:center;gap:52px;margin-top:150px}
+.wk-g{display:flex;flex-direction:column;align-items:center;gap:12px;font:500 17px/1 inherit;color:#fff}
+.wk-gc{position:relative;width:78px;height:78px;border-radius:50%;border:3px solid #fff;display:grid;place-items:center;overflow:hidden}
+.wk-gc svg{width:62px;height:62px;margin-top:14px;fill:#fff}
+.wk-gr{position:absolute;right:-8px;bottom:-4px;width:32px;height:32px;border-radius:50%;border:3px solid #fff;background:var(--wk-night2);display:grid;place-items:center}
+.wk-gw{position:relative}
+.wk-gr i{width:14px;height:14px;border-radius:50%;background:var(--wk-orange);opacity:0;transition:.16s}
+.wk-g.on .wk-gr i{opacity:1}
+.wk-g.on .wk-gc{border-color:var(--wk-orange)}
+
+/* name */
+.wk-av{position:relative;width:188px;height:188px;border-radius:50%;background:var(--wk-pink);margin:44px auto 0;display:grid;place-items:center;
+  font:400 104px/1 'Inter',sans-serif;color:#fff}
+.wk-av .pen{position:absolute;right:16px;top:12px;width:42px;height:42px;border-radius:50%;background:#2E2A60;display:grid;place-items:center}
+.wk-av .pen svg{width:18px;height:18px;fill:#fff}
+.wk-input{display:block;width:100%;height:60px;margin-top:38px;border-radius:20px;background:var(--wk-field);border:none;outline:none;
+  padding:0 22px;font:500 18px/1 inherit;color:#fff}
+
+/* loader */
+.wk-ld{display:flex;flex-direction:column;align-items:center;padding-top:36px;height:100%}
+.wk-ld h2{font-size:21px;line-height:1.35;font-weight:500;text-align:center;color:#fff}
+.wk-ld h2 em{font-style:normal;color:var(--wk-orange);display:block}
+.wk-spinbox{width:72px;height:72px;border-radius:10px;background:#29282D;display:grid;place-items:center;margin:40px 0 30px}
+.wk-spinbox svg{width:34px;height:34px;animation:spin 1s steps(8) infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.wk-steps{width:100%;max-width:300px;display:flex;flex-direction:column;gap:13px}
+.wk-st{display:flex;align-items:center;gap:11px;font-size:14.5px;font-weight:500;color:rgba(255,255,255,.45);transition:.35s}
+.wk-st.on{color:#fff}
+.wk-st .d{width:22px;height:22px;flex:none;border-radius:50%;border:2px solid rgba(255,255,255,.35);display:grid;place-items:center;transition:.35s}
+.wk-st.on .d{background:var(--wk-orange);border-color:var(--wk-orange)}
+.wk-st .d svg{width:12px;height:12px;stroke:#fff;stroke-width:3.2;fill:none;opacity:0;stroke-linecap:round;stroke-linejoin:round}
+.wk-st.on .d svg{opacity:1}
+.wk-quote{width:100%;background:var(--wk-field);border-radius:20px;padding:15px 17px;margin-top:28px;direction:ltr;text-align:left}
+.wk-quote p{font-size:14px;line-height:1.5;color:#fff}
+.wk-quote b{display:block;margin-top:8px;font-size:12.5px;font-weight:600;color:var(--wk-orange)}
+
+/* payoff */
+.wk-prof{display:flex;align-items:center;gap:14px;background:var(--wk-field);border-radius:var(--r-ctl);padding:14px;margin-top:22px}
+.wk-prof .a{width:58px;height:58px;border-radius:50%;background:var(--wk-pink);flex:none;display:grid;place-items:center;font:500 30px/1 'Inter',sans-serif;color:#fff}
+.wk-prof b{display:block;font-size:18px;font-weight:600;color:#fff}
+.wk-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.wk-tag{font-size:12px;font-weight:600;color:var(--wk-orange);background:rgba(255,151,0,.14);border-radius:10px;padding:4px 9px}
+.wk-lab{font-size:12px;font-weight:700;letter-spacing:.08em;color:var(--wk-muted);margin:20px 0 9px;text-transform:uppercase}
+.wk-clubs{display:flex;flex-direction:column;gap:8px}
+.wk-club{display:flex;align-items:center;gap:12px;background:var(--wk-field);border-radius:18px;padding:11px 12px}
+.wk-club .i{width:38px;height:38px;border-radius:12px;background:rgba(255,255,255,.1);display:grid;place-items:center;font-size:19px;flex:none}
+.wk-club b{flex:1;font-size:15px;font-weight:600;color:#fff}
+.wk-club span{font-size:13px;font-weight:600;color:var(--wk-orange)}
+.wk-proof{font-size:13px;color:var(--wk-muted);text-align:center;margin-top:14px;font-weight:500}
+
+/* paywall — black, their photo, their toggle and plan cards */
+.scr--pay{background:var(--wk-pay)}
+.wk-photo{position:absolute;left:0;right:0;top:0;height:190px;z-index:0;pointer-events:none;
+  -webkit-mask-image:linear-gradient(180deg,#000 72%,transparent);mask-image:linear-gradient(180deg,#000 72%,transparent)}
+.wk-photo img{width:100%;height:100%;object-fit:cover;object-position:50% 80%;display:block}
+.wk-x{position:absolute;right:18px;top:52px;width:40px;height:40px;display:grid;place-items:center;color:rgba(255,255,255,.55);z-index:5}
+[dir=rtl] .wk-x{right:auto;left:18px}
+.wk-x svg{width:22px;height:22px}
+.scr--pay .scr-top{padding:150px 22px 0}
+.wk-payh{font-size:25px;line-height:1.12;font-weight:800;letter-spacing:-.02em;text-align:center;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.5)}
+.wk-paysub{font-size:15px;color:rgba(255,255,255,.72);text-align:center;margin-top:5px}
+.scr--pay .scr-body{padding:0 22px}
+.scr--pay .scr-foot{padding:10px 22px 24px}
+.wk-feat{margin-top:12px;background:var(--wk-row);border-radius:20px;padding:10px 14px;display:flex;flex-direction:column;gap:6px}
+.wk-f{display:flex;align-items:center;gap:10px;font-size:13.5px;line-height:1.25;color:rgba(255,255,255,.78)}
+.wk-f b{color:#fff;font-weight:600}
+.wk-f .c{width:20px;height:20px;border-radius:50%;background:var(--wk-orange);display:grid;place-items:center;flex:none}
+.wk-f .c svg{width:11px;height:11px;stroke:#fff;stroke-width:3.4;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.wk-stars{font-size:12.5px;color:rgba(255,255,255,.6);text-align:center;margin-top:7px;font-weight:500}
+.wk-stars b{color:var(--wk-badge)}
+.wk-tgl{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--wk-row);border-radius:22px;height:52px;padding:0 14px 0 18px;margin-top:9px;width:100%;text-align:start}
+.wk-tgl span{font-size:16px;color:rgba(255,255,255,.8)}
+.wk-tgl.on span{color:#fff}
+.wk-sw{width:56px;height:32px;border-radius:16px;background:rgba(255,255,255,.18);position:relative;flex:none;transition:.2s}
+.wk-sw i{position:absolute;top:2px;left:2px;width:28px;height:28px;border-radius:50%;background:#fff;transition:.2s;box-shadow:0 2px 4px rgba(0,0,0,.25)}
+.wk-tgl.on .wk-sw{background:var(--wk-toggle)}
+.wk-tgl.on .wk-sw i{left:26px}
+.wk-plans{display:flex;flex-direction:column;gap:10px;margin-top:18px}
+.wk-plan{position:relative;display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;text-align:start;min-height:56px;
+  background:var(--wk-plan);border:2px solid var(--wk-planline);border-radius:24px;padding:10px 18px;color:rgba(255,255,255,.62);transition:.16s;direction:ltr}
+[dir=rtl] .wk-plan{direction:rtl}
+.wk-plan .t{font-size:18px;font-weight:500;display:block}
+.wk-plan .t small{display:block;font-size:16px;font-weight:500}
+.wk-plan .p{font-size:16px;white-space:nowrap}
+.wk-plan.on{border-color:var(--wk-orange);background:var(--wk-sel);color:#fff;box-shadow:0 0 16px rgba(255,151,0,.38)}
+.wk-sale{position:absolute;top:-15px;right:16px;background:var(--wk-badge);color:#fff;border-radius:9px;padding:4px 10px;font:italic 700 13.5px/1.2 'Inter',sans-serif;white-space:nowrap}
+[dir=rtl] .wk-sale{right:auto;left:16px}
+.wk-cancelln{font-size:13px;color:rgba(255,255,255,.5);text-align:center;margin:0 0 9px}
+.wk-white{display:block;width:100%;height:58px;border-radius:29px;background:var(--wk-cta);color:var(--wk-cta-ink);font:500 19px/1 inherit}
+.wk-legal{font-size:12px;color:rgba(255,255,255,.55);text-align:center;margin-top:10px}
+.wk-legal b{color:rgba(255,255,255,.8);font-weight:500}
+
+/* offer — a full screen instead of the iOS alert: trial timeline on the same 6-month SKU */
+.scr--offer{background:var(--wk-pay)}
+.scr--offer .wk-photo{height:150px;opacity:.5}
+.wk-okick{font-size:13px;font-weight:600;color:var(--wk-badge);text-align:center;margin-top:118px;letter-spacing:.01em}
+.wk-oh{font-size:31px;line-height:1.12;font-weight:800;letter-spacing:-.02em;text-align:center;color:#fff;margin-top:8px}
+.wk-tl{margin-top:26px;position:relative;padding-inline-start:44px;display:flex;flex-direction:column;gap:22px}
+.wk-tl::before{content:'';position:absolute;inset-inline-start:15px;top:12px;bottom:12px;width:3px;border-radius:2px;
+  background:linear-gradient(180deg,var(--wk-orange),var(--wk-badge) 55%,rgba(255,255,255,.18))}
+.wk-ti{position:relative}
+.wk-ti .dot{position:absolute;inset-inline-start:-44px;top:0;width:33px;height:33px;border-radius:50%;background:var(--wk-orange);display:grid;place-items:center}
+.wk-ti .dot svg{width:16px;height:16px;stroke:#fff;stroke-width:2.4;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.wk-ti:nth-child(3) .dot{background:#3A3A3C}
+.wk-ti b{display:block;font-size:17px;font-weight:700;color:#fff}
+.wk-ti p{font-size:14.5px;line-height:1.4;color:rgba(255,255,255,.68);margin-top:3px}
+.wk-osum{margin-top:24px;border:2px solid var(--wk-orange);background:var(--wk-sel);border-radius:22px;padding:13px 18px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 0 16px rgba(255,151,0,.3)}
+.wk-osum b{font-size:17px;font-weight:600;color:#fff}
+.wk-osum span{font-size:15px;color:#fff;white-space:nowrap}
+
+/* sign-in — their four buttons, moved after the paywall */
+.wk-sbtns{display:flex;flex-direction:column;gap:11px;margin-top:30px}
+.wk-sb{display:flex;align-items:center;height:56px;border-radius:9px;padding:0 16px;font:500 18px/1 inherit;color:#fff;width:100%}
+.wk-sb svg{width:26px;height:26px;flex:none}
+.wk-sb span{flex:1;text-align:center;padding-inline-end:26px}
+.wk-sb.fb{background:#4267B2} .wk-sb.ap{background:#fff;color:#000} .wk-sb.gg{background:#4285F4} .wk-sb.ph{background:#AB5268}
+
+/* notifications — a soft prompt, then the system dialog */
+.wk-bell{width:110px;height:110px;border-radius:50%;background:rgba(255,151,0,.16);display:grid;place-items:center;margin:70px auto 0}
+.wk-bell svg{width:52px;height:52px;fill:var(--wk-orange)}
+.wk-ntf{margin-top:28px;background:rgba(245,245,250,.92);border-radius:20px;padding:12px 14px;display:flex;gap:11px;align-items:center;color:#111;direction:ltr;text-align:left}
+.wk-ntf img{width:38px;height:38px;border-radius:9px;flex:none}
+.wk-ntf b{display:block;font-size:13.5px}
+.wk-ntf span{font-size:13px;color:#333}
+.wk-sys{position:absolute;inset:0;z-index:40;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center}
+.wk-sys.on{display:flex}
+.wk-sysc{width:300px;background:rgba(40,40,44,.96);border-radius:30px;padding:22px 20px 18px;color:#fff;text-align:left}
+[dir=rtl] .wk-sysc{text-align:right}
+.wk-sysc h4{font-size:17px;line-height:1.3;font-weight:600}
+.wk-sysc p{font-size:14px;line-height:1.4;color:rgba(255,255,255,.65);margin-top:8px}
+.wk-sysb{display:flex;gap:10px;margin-top:18px}
+.wk-sysb button{flex:1;height:46px;border-radius:23px;background:rgba(255,255,255,.12);font:500 16px/1 inherit;color:#fff}
+
+/* light mode — an approximation: Wakie ships dark only in the frames we have */
+.phone-in.light{--wk-night:#F4F2FB;--wk-field:rgba(44,38,108,.07);--wk-ink:#1F1A4E;--wk-txt:#3B3768;--wk-muted:#6E6A92;
+  --wk-modal:#FFFFFF;--wk-modal2:#ECEAF5;--wk-pay:#FFFFFF;--wk-plan:#FFFFFF;--wk-planline:#E3E1EE;--wk-sel:#FFF3E0;--wk-row:#F2F1F7;
+  --wk-cta:#111111;--wk-cta-ink:#FFFFFF}
+.phone-in.light .wk-dim{background:linear-gradient(180deg,rgba(248,246,255,.93),rgba(244,241,252,.9))}
+.phone-in.light .wk-dim.deep{background:rgba(244,242,251,.86)}
+.phone-in.light .scr:not(.scr--welcome),.phone-in.light .wk-h,.phone-in.light .wk-row,.phone-in.light .wk-g,.phone-in.light .wk-input,
+.phone-in.light .wk-ld h2,.phone-in.light .wk-quote p,.phone-in.light .wk-prof b,.phone-in.light .wk-club b{color:var(--wk-ink)}
+.phone-in.light .wk-gc{border-color:#2C266C}.phone-in.light .wk-gc svg{fill:#2C266C}.phone-in.light .wk-gr{border-color:#2C266C;background:#fff}
+.phone-in.light .wk-g.on .wk-gc{border-color:var(--wk-orange)}
+.phone-in.light .wk-ck{border-color:rgba(31,26,78,.3)}
+.phone-in.light .wk-st{color:rgba(31,26,78,.4)}.phone-in.light .wk-st.on{color:var(--wk-ink)}.phone-in.light .wk-st .d{border-color:rgba(31,26,78,.25)}
+.phone-in.light .wk-spinbox{background:#E4E2EE}
+.phone-in.light .wk-modal h3,.phone-in.light .wk-modal p,.phone-in.light .wk-modal .wk-cancel{color:var(--wk-ink)}
+.phone-in.light .wk-modal{box-shadow:0 10px 40px rgba(44,38,108,.18)}
+.phone-in.light .wk-club .i{background:rgba(44,38,108,.08)}
+.phone-in.light .wk-payh,.phone-in.light .wk-oh,.phone-in.light .wk-ti b,.phone-in.light .wk-osum b,.phone-in.light .wk-osum span{color:#111;text-shadow:none}
+.phone-in.light .wk-paysub,.phone-in.light .wk-f,.phone-in.light .wk-tgl span,.phone-in.light .wk-ti p{color:#555}
+.phone-in.light .wk-f b{color:#111}
+.phone-in.light .wk-stars,.phone-in.light .wk-cancelln,.phone-in.light .wk-legal{color:#777}.phone-in.light .wk-legal b{color:#333}
+.phone-in.light .wk-sw{background:#DADAE2}
+.phone-in.light .wk-plan{color:#777}.phone-in.light .wk-plan.on{color:#111;box-shadow:0 0 14px rgba(255,151,0,.28)}
+.phone-in.light .wk-x{color:#555}
+.phone-in.light .wk-photo{-webkit-mask-image:linear-gradient(180deg,#000 45%,transparent);mask-image:linear-gradient(180deg,#000 45%,transparent)}
+.phone-in.light .wk-ti:nth-child(3) .dot{background:#C9C8D3}
+.phone-in.light .wk-ghost{color:#6E6A92}
+.phone-in.light .wk-back{color:rgba(31,26,78,.55)}
+.phone-in.light .wk-av .pen{background:#fff}.phone-in.light .wk-av .pen svg{fill:#2C266C}
+.phone-in.light .wk-sysc{background:rgba(242,242,247,.97);color:#111}.phone-in.light .wk-sysc p{color:#555}
+.phone-in.light .wk-sysb button{background:rgba(0,0,0,.07);color:#111}
+
+/* prototype toolbar, walkthrough, QR */
+.tools{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:520px}
+.seg{display:inline-flex;align-items:center;background:var(--surf);border:1px solid var(--hair2);border-radius:20px;padding:3px;gap:2px}
+.seg button{padding:6px 11px;border-radius:16px;font:600 12px/1 'Inter',sans-serif;color:var(--ink2);transition:.14s}
+.seg button.on{background:#fff;color:var(--bg)}
+.demo-btn{display:inline-flex;align-items:center;gap:7px;padding:9px 14px;border-radius:20px;background:var(--accent);color:#fff;
+  font:700 12px/1 'Inter',sans-serif}
+.demo-cap{width:390px;max-width:calc(100vw - 24px);background:var(--surf);border:1px solid var(--hair2);border-radius:16px;padding:14px 14px 12px;
+  display:flex;align-items:center;gap:12px;position:relative;overflow:hidden;box-shadow:0 4px 18px rgba(0,0,0,.25)}
+.demo-cap .bar{position:absolute;left:0;top:0;right:0;height:3px;background:rgba(255,255,255,.08)}
+.demo-cap .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s linear}
+.demo-cap p{flex:1;font-size:13.5px;line-height:1.45;color:var(--ink);margin:0;font-weight:500}
+.demo-cap button{font:700 12px/1 'Inter',sans-serif;color:var(--ink2);padding:7px 10px;border-radius:12px;border:1px solid var(--hair2);flex:none}
+.finger{position:absolute;z-index:90;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;background:rgba(255,255,255,.28);
+  border:2px solid rgba(255,255,255,.95);box-shadow:0 4px 14px rgba(0,0,0,.35);pointer-events:none;opacity:0;left:50%;top:60%;
+  transition:left .32s cubic-bezier(.4,0,.2,1),top .32s cubic-bezier(.4,0,.2,1),opacity .2s,transform .15s}
+.finger.show{opacity:1}
+.finger.press{transform:scale(.78);background:rgba(255,255,255,.45)}
+.qr{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--hair);border-radius:16px;padding:10px 16px 10px 10px;text-align:left}
+.qr img{width:123px;height:123px;display:block;image-rendering:pixelated;border-radius:6px}
+.qr span{font-size:12.5px;line-height:1.45;color:#4A4766}
+.qr b{display:block;color:#17143A;font-size:13.5px}
+@media(max-width:1080px){.qr{display:none}}
+
+#view-proto .tools{order:0} #view-proto .demo-cap{order:1} #view-proto .phone{order:2} #view-proto .chips{order:3}
+#view-proto .chiphint{order:4} #view-proto .qr{order:5}
+.cta-row .qr{order:2}
+/* on a phone: the prototype is the screen */
+@media(max-width:500px){
+  #view-proto .phonecol{padding:0 0 28px;gap:14px}
+  #view-proto .phone{width:100vw;height:calc(100svh - 58px);min-height:640px;border:0;border-radius:0;box-shadow:none;order:1}
+  #view-proto .phone-in{border-radius:0}
+  #view-proto .island,#view-proto .sbar,#view-proto .homebar{display:none}
+  #view-proto .scr-top{padding-top:16px}
+  #view-proto .scr-foot{padding-bottom:18px}
+  #view-proto .scr--pay .scr-top{padding-top:150px}
+  #view-proto .wk-photo{height:160px}
+  #view-proto .wk-x{top:12px}
+  #view-proto .wk-wh{margin-top:130px}
+  #view-proto .wk-okick{margin-top:84px}
+  #view-proto .wk-modal{margin-top:110px}
+  #view-proto .wk-gender{margin-top:110px}
+  #view-proto .tools{order:3;padding:0 12px}
+  #view-proto .demo-cap{position:fixed;left:12px;right:12px;bottom:12px;width:auto;max-width:none;z-index:95}
+  #view-proto .chips{order:4;padding:0 12px}
+  #view-proto .chiphint{order:5}
+}
+
+/* overview: walkthrough button */
+.herobtns{display:flex;justify-content:center;margin-top:30px}
+.ghostbtn{display:inline-flex;align-items:center;gap:10px;background:var(--surf);border:1px solid var(--hair2);color:var(--ink);font-size:14px;
+  font-weight:700;padding:9px 20px 9px 9px;border-radius:30px;transition:.16s}
+.ghostbtn:hover{background:#2E2972}
+.ghostbtn .pl{width:30px;height:30px;border-radius:50%;background:var(--accent);display:grid;place-items:center}
+.ghostbtn .pl svg{width:12px;height:12px;fill:#fff;margin-left:2px}
+
+/* chips */
+.chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;max-width:470px;margin:0 auto}
+.chip{padding:7px 13px;border-radius:20px;border:1px solid var(--hair2);background:var(--surf);
+  font:600 12px/1 'Inter',sans-serif;color:var(--ink2);transition:.14s}
+.chip:hover{color:var(--ink);border-color:rgba(255,255,255,.3)}
+.chip.offer{border-style:dashed;border-color:var(--accent);color:var(--accent-lift)}
+.chip.on{background:var(--accent);border-color:var(--accent);color:#fff;border-style:solid}
+.chiphint{text-align:center;font-size:11px;color:var(--ink3);margin:0;max-width:430px}
+
+/* ============ the short panel ============ */
+.pn{padding:30px 30px 60px}
+.pn-n{font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-ink)}
+.pn-n.ctx{color:var(--panel-muted)}
+.pn-t{font-size:23px;line-height:1.18;font-weight:700;letter-spacing:-.028em;margin:8px 0 0;color:var(--panel-ink)}
+.pn-hyp{font-size:15px;line-height:1.62;color:#2F2C4A;margin:16px 0 0}
+.pn-hyp b{font-weight:700;color:var(--panel-ink)}
+.pn-out{margin-top:22px;border-top:1px solid var(--panel-line);padding-top:18px}
+.pn-out .lab{font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--panel-muted)}
+.pn-out .v{font-size:31px;font-weight:700;letter-spacing:-.035em;color:var(--accent-ink);margin-top:7px;line-height:1}
+.pn-kept{margin-top:22px;font-size:12.5px;line-height:1.55;color:var(--panel-muted)}
+.pn-kept b{color:#2F2C4A;font-weight:700}
+.pn-foot{font-size:11.5px;line-height:1.55;color:var(--panel-muted);border-top:1px solid var(--panel-line);
+  padding-top:14px;margin-top:26px}
+.pn-sep{height:1px;background:var(--panel-line);margin:26px 0}
+.hidden{display:none !important}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="nav-in">
+    <div class="nav-brand">
+      <img src="img/icon.png" alt="Wakie">
+      <b>Growth Audit</b><span>· Wakie</span>
+    </div>
+    <div class="nav-links">
+      <button class="on" data-view="over">Overview</button>
+      <button data-view="proto">Prototype</button>
+    </div>
+  </div>
+</div>
+
+<!-- ======================= OVERVIEW ======================= -->
+<div class="view on" id="view-over">
+
+<div class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Growth Audit · October 2026</div>
+    <h1>Wakie</h1>
+    <p class="lede">Five ideas to unlock more revenue from the traffic you already have.</p>
+    <div class="meta">Prepared by <b>Adapty</b> · based on your live iOS flow and your App Store listing</div>
+    <div class="herobtns"><button class="ghostbtn" data-demo><span class="pl"><svg viewBox="0 0 24 24"><path d="M7 4.5v15l12-7.5z"/></svg></span>Watch the 30-second walkthrough</button></div>
+    <div class="stats">
+      <div class="stat"><b>30,000+</b><span>apps run subscriptions<br>on Adapty</span></div>
+      <div class="stat"><b>5</b><span>ideas, each rebuilt<br>as a working screen</span></div>
+      <div class="stat"><b>0</b><span>design changes<br>to your art direction</span></div>
+    </div>
+
+    <div class="fb">
+      <div class="fb-k">Built in Adapty Flow Builder</div>
+      <div class="fb-i">
+        <span class="tick"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>
+        <p><b>Millions of dollars</b> in subscription revenue pass through Flow Builder every month.</p>
+      </div>
+      <div class="fb-i">
+        <span class="tick"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>
+        <p><b>Nearly 500 apps</b> actively build their paywalls and onboarding in it — plenty of them past $100K MRR.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sec">
+  <div class="wrap">
+    <div class="sec-k">What this is</div>
+    <h2>We opened Wakie the way a new user does, then rebuilt the parts we think are leaving money on the table.</h2>
+    <p class="body">Adapty powers subscriptions for <b>30,000+ apps</b>, so we get to see what actually moves conversion and ARPU across the market rather than inside one app. We pointed that at Wakie: installed it, went through every screen up to the paywall and past it, read your App Store and Google Play listings and your website, and looked for gaps between what you already have and what you currently show people.</p>
+    <p class="body">What follows is five ideas — not fifteen. Each one is a hypothesis you can A/B test, and each one is built into a clickable prototype so you can see it rather than imagine it. <b>The prototype uses your design, not ours.</b></p>
+
+    <div class="notes">
+      <div class="note">
+        <h4>We did not redesign your app</h4>
+        <p>Every screen in the prototype is yours — the night-city scene, the orange pill, the two gender circles, the pink initial avatar, the black paywall with its photo, trial toggle and Sale 60% card. Only the order changed, plus a few things you already own but do not show at the right moment.</p>
+      </div>
+      <div class="note">
+        <h4>You may have tested some of this</h4>
+        <p>We are working from the outside, so we cannot see your experiment history. If one of these is something you have already run, tell us — we will go deeper on the rest rather than repeat it.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="rule"></div>
+
+<div class="sec">
+  <div class="wrap">
+    <div class="sec-k">The five ideas</div>
+    <h2>Ranked by what we would test first.</h2>
+    <p class="body">Each one links straight to the screen in the prototype.</p>
+
+    <div class="ideas">
+      <button class="idea" data-jump="offer">
+        <span class="no">01</span>
+        <span>
+          <h3>Turn the close alert into a real offer</h3>
+          <p>Closing the paywall opens a grey iOS alert: “Once you close this, the free trial is gone”, with Skip offer and Continue. The offer is right, but the alert shows no price, no plan and no reason. Give it a full screen that shows the 3 free days, then €39.99 for 6 months.</p>
+          <span class="seeit">See the screen <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </span>
+        <span class="out"><b>ARPU +10–15%</b><span>second chance</span></span>
+      </button>
+
+      <button class="idea" data-jump="paywall">
+        <span class="no">02</span>
+        <span>
+          <h3>Say what Wakie Plus does on the paywall</h3>
+          <p>“Choose Your Plan” shows a photo and two prices, but not one thing Plus unlocks. Your Google Play listing already names four: badges and colours, promoted topics, who visited your profile, past topics. Put them on the paywall, led by what this person came for, next to your 4.5 from 19K ratings.</p>
+          <span class="seeit">See the screen <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </span>
+        <span class="out"><b>CR +15–20%</b><span>to purchase</span></span>
+      </button>
+
+      <button class="idea" data-jump="payoff">
+        <span class="no">03</span>
+        <span>
+          <h3>Make “Personalizing Wakie for you” personal</h3>
+          <p>The loader promises personalization, then every user gets the same paywall. Ask one question your listing already answers — say what is on my mind, make friends, practise a language, get advice — and read it back: their name, clubs to start in, and a review from someone who came for the same thing.</p>
+          <span class="seeit">See the screen <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </span>
+        <span class="out"><b>CR +10–20%</b><span>to purchase</span></span>
+      </button>
+
+      <button class="idea" data-jump="notify">
+        <span class="no">04</span>
+        <span>
+          <h3>Ask for notifications when they mean something</h3>
+          <p>The notification prompt is the second thing a new install sees, before a single person or topic. Move it past the paywall, behind one screen that says what it is for: knowing when someone accepts your “Let’s talk”.</p>
+          <span class="seeit">See the screen <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </span>
+        <span class="out"><b>CR +10–15%</b><span>to purchase</span></span>
+      </button>
+
+      <button class="idea" data-jump="account">
+        <span class="no">05</span>
+        <span>
+          <h3>Let people in before the sign-in buttons</h3>
+          <p>Facebook, Apple, Google or phone is the first real screen. Let the questions, the payoff and the paywall come first, then ask them to save the profile they have just made.</p>
+          <span class="seeit">See the screen <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </span>
+        <span class="out"><b>CR +8%</b><span>ARPU +17%</span></span>
+      </button>
+    </div>
+
+    <div class="band">
+      <div class="txt">
+        <div class="lab">Potential outcome</div>
+        <p>Run together, these five move the same funnel at three points — what stands between install and the paywall, what the paywall says, and what happens when someone closes it.</p>
+      </div>
+      <div class="nums">
+        <div><b>up to +25%</b><span>CR to purchase</span></div>
+        <div><b>up to +30%</b><span>ARPU</span></div>
+      </div>
+    </div>
+
+    <div class="cta-row">
+      <div class="qr"><img src="img/qr.svg" alt="QR code for the prototype"><span><b>Or open it on your phone</b>Scan to try the flow in your hand.</span></div>
+      <button class="bigbtn" data-view="proto">Open the prototype
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="foot">
+  <div class="wrap">
+    Impact ranges are Adapty's expected effect from teardowns and A/B tests across subscription apps — not measured lift for Wakie. Every price, rating, review, member count and Wakie Plus feature here and in the prototype comes from Wakie's own App Store and Google Play listings, wakie.com and its in-app screens.
+  </div>
+</div>
+</div><!-- /view-over -->
+
+<!-- ======================= PROTOTYPE ======================= -->
+<div class="view" id="view-proto">
+<div class="stage">
+  <div class="phonecol">
+    <div class="tools" id="tools">
+      <div class="seg" id="segLang"><button data-lang="en" class="on">EN</button><button data-lang="ru">RU</button><button data-lang="ar">AR</button></div>
+      <div class="seg" id="segTheme"><button data-theme="light">Light</button><button data-theme="dark" class="on">Dark</button></div>
+      <button class="demo-btn" id="demoBtn"><svg viewBox="0 0 24 24" width="11" height="11" fill="currentColor"><path d="M7 4.5v15l12-7.5z"/></svg>30-sec walkthrough</button>
+    </div>
+    <div class="phone">
+      <div class="phone-in" id="phoneIn">
+        <div class="island"></div>
+        <div class="sbar" id="sbar">
+          <span>12:14</span>
+          <span class="glyphs">
+            <svg width="17" height="11" viewBox="0 0 17 11" fill="currentColor"><rect x="0" y="7.5" width="3" height="3.5" rx="1"/><rect x="4.5" y="5.5" width="3" height="5.5" rx="1"/><rect x="9" y="3" width="3" height="8" rx="1"/><rect x="13.5" y="0" width="3" height="11" rx="1"/></svg>
+            <svg width="16" height="11" viewBox="0 0 16 11" fill="currentColor"><path d="M8 10.5 5.6 7.9a3.4 3.4 0 0 1 4.8 0L8 10.5Zm0-5.6a6.4 6.4 0 0 0-4.5 1.9L1.7 4.9a9 9 0 0 1 12.6 0l-1.8 1.9A6.4 6.4 0 0 0 8 4.9Z"/></svg>
+            <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x=".6" y=".6" width="20" height="10.8" rx="3" stroke="currentColor" stroke-opacity=".5"/><rect x="2.2" y="2.2" width="16.5" height="7.6" rx="1.8" fill="currentColor"/><path d="M22.3 4.1v3.8a2 2 0 0 0 0-3.8Z" fill="currentColor" fill-opacity=".5"/></svg>
+          </span>
+        </div>
+        <div class="homebar" id="homebar"></div>
+        <div class="finger" id="finger"></div>
+        <div class="screenwrap">
+
+<!-- WELCOME -->
+<section class="scr scr--welcome" data-id="welcome" data-scene="1">
+  <div class="wk-scene"></div><div class="wk-dim"></div>
+  <div class="scr-top" style="padding-top:0"></div>
+  <div class="scr-body">
+    <h2 class="wk-wh" data-t="wel.h"></h2>
+    <p class="wk-ws" data-t="wel.sub"></p>
+    <button class="wk-btn" data-go="rules" data-t="wel.cta"></button>
+    <button class="wk-have" data-go="account" data-t="wel.have"></button>
+  </div>
+  <div class="scr-foot"></div>
+</section>
+
+<!-- COMMUNITY RULES -->
+<section class="scr" data-id="rules">
+  <div class="wk-scene"></div><div class="wk-dim deep"></div>
+  <div class="scr-top" style="padding-top:0"></div>
+  <div class="scr-body">
+    <div class="wk-modal">
+      <h3 data-th="ru.h"></h3>
+      <p data-t="ru.p"></p>
+      <p data-t="ru.1"></p>
+      <p data-th="ru.2"></p>
+      <button class="wk-btn" id="rulesOk" data-go="talk" data-t="ru.ok"></button>
+      <button class="wk-cancel" data-back data-t="ru.no"></button>
+    </div>
+  </div>
+  <div class="scr-foot"></div>
+</section>
+
+<!-- WHAT BRINGS YOU -->
+<section class="scr" data-id="talk">
+  <div class="wk-scene"></div><div class="wk-dim"></div>
+  <div class="scr-top">
+    <button class="wk-back" data-back aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4 7 12l8 8"/></svg></button>
+    <h2 class="wk-h" style="margin-top:4px" data-th="tk.h"></h2>
+    <p class="wk-sub" data-t="tk.sub"></p>
+  </div>
+  <div class="scr-body"><div class="wk-rows" id="talkList"></div><div style="height:10px"></div></div>
+  <div class="scr-foot"><button class="wk-btn" id="talkBtn" data-go="gender" data-t="cont"></button></div>
+</section>
+
+<!-- GENDER -->
+<section class="scr" data-id="gender">
+  <div class="wk-scene"></div><div class="wk-dim"></div>
+  <div class="scr-top">
+    <h2 class="wk-h" style="margin-top:44px" data-th="g.h"></h2>
+  </div>
+  <div class="scr-body">
+    <div class="wk-gender">
+      <button class="wk-g" data-g="male"><span class="wk-gw"><span class="wk-gc"><svg viewBox="0 0 64 64"><path d="M32 6c-8 0-12 5-12 12 0 3 .4 5 1 7-1 0-1.6 1-1.2 2.6.4 1.8 1.3 2.6 2.2 2.6 1.2 3.6 3.4 6.4 6 8v4c-6 2-16 4-18 10v6h44v-6c-2-6-12-8-18-10v-4c2.6-1.6 4.8-4.4 6-8 .9 0 1.8-.8 2.2-2.6.4-1.6-.2-2.6-1.2-2.6.6-2 1-4 1-7 0-7-4-12-12-12z"/></svg></span><span class="wk-gr"><i></i></span></span><span data-t="g.m"></span></button>
+      <button class="wk-g" data-g="female"><span class="wk-gw"><span class="wk-gc"><svg viewBox="0 0 64 64"><path d="M32 6c-9 0-14 6-14 14v14c0 2-1 4-2 5 3 1 7 1 10 0v2c-6 2-14 4-16 9v6h44v-6c-2-5-10-7-16-9v-2c3 1 7 1 10 0-1-1-2-3-2-5V20c0-8-5-14-14-14z"/></svg></span><span class="wk-gr"><i></i></span></span><span data-t="g.f"></span></button>
+    </div>
+  </div>
+  <div class="scr-foot"></div>
+</section>
+
+<!-- NAME -->
+<section class="scr" data-id="name">
+  <div class="wk-scene"></div><div class="wk-dim"></div>
+  <div class="scr-top">
+    <button class="wk-back" data-back aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4 7 12l8 8"/></svg></button>
+    <h2 class="wk-h" style="margin-top:4px" data-th="n.h"></h2>
+  </div>
+  <div class="scr-body">
+    <div class="wk-av"><span id="avInit">S</span><span class="pen"><svg viewBox="0 0 24 24"><path d="M3 17.3V21h3.7L17.8 9.9l-3.7-3.7L3 17.3zM20.7 7a1 1 0 0 0 0-1.4l-2.3-2.3a1 1 0 0 0-1.4 0l-1.8 1.8 3.7 3.7L20.7 7z"/></svg></span></div>
+    <input class="wk-input" id="nameIn" maxlength="18" autocomplete="off" aria-label="Your name">
+  </div>
+  <div class="scr-foot"><button class="wk-btn" id="nameBtn" data-go="loader" data-t="cont"></button></div>
+</section>
+
+<!-- LOADER -->
+<section class="scr" data-id="loader">
+  <div class="wk-scene"></div><div class="wk-dim"></div>
+  <div class="scr-top"></div>
+  <div class="scr-body">
+    <div class="wk-ld">
+      <h2><span data-t="ld.h1"></span><em data-t="ld.h2"></em></h2>
+      <div class="wk-spinbox"><svg viewBox="0 0 24 24" id="spin"></svg></div>
+      <div class="wk-steps" id="ldSteps">
+        <div class="wk-st"><span class="d"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><span class="t">—</span></div>
+        <div class="wk-st"><span class="d"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><span class="t">—</span></div>
+        <div class="wk-st"><span class="d"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><span class="t">—</span></div>
+      </div>
+      <div class="wk-quote"><p id="ldQ"></p><b id="ldW"></b></div>
+    </div>
+  </div>
+  <div class="scr-foot"></div>
+</section>
+
+<!-- PAYOFF -->
+<section class="scr" data-id="payoff">
+  <div class="wk-scene"></div><div class="wk-dim"></div>
+  <div class="scr-top">
+    <h2 class="wk-h" style="margin-top:22px" id="poH"></h2>
+  </div>
+  <div class="scr-body">
+    <div class="wk-prof"><span class="a" id="poAv">S</span><div><b id="poName"></b><div class="wk-tags" id="poTags"></div></div></div>
+    <div class="wk-lab" data-t="po.clubs"></div>
+    <div class="wk-clubs" id="poClubs"></div>
+    <div class="wk-quote" style="margin-top:16px"><p id="poQ"></p><b id="poW"></b></div>
+    <p class="wk-proof" data-t="po.proof"></p>
+    <div style="height:8px"></div>
+  </div>
+  <div class="scr-foot"><button class="wk-btn" data-go="paywall" data-t="cont"></button></div>
+</section>
+
+<!-- PAYWALL -->
+<section class="scr scr--pay" data-id="paywall">
+  <div class="wk-photo"><img src="img/pay-photo.jpg" alt=""></div>
+  <button class="wk-x" id="payClose" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  <div class="scr-top">
+    <h2 class="wk-payh" id="payH"></h2>
+    <p class="wk-paysub" data-t="pw.sub"></p>
+  </div>
+  <div class="scr-body">
+    <div class="wk-feat" id="featList"></div>
+    <p class="wk-stars" data-th="pw.proof"></p>
+    <button class="wk-tgl" id="tgl"><span id="tglL"></span><span class="wk-sw"><i></i></span></button>
+    <div class="wk-plans">
+      <button class="wk-plan" data-v="half">
+        <span class="wk-sale">🔥 <span data-t="pw.sale"></span></span>
+        <span class="t" id="halfT"></span>
+        <span class="p" id="halfP"></span>
+      </button>
+      <button class="wk-plan" data-v="week">
+        <span class="t" data-t="pw.week"></span>
+        <span class="p">€7.99</span>
+      </button>
+    </div>
+    <div style="height:6px"></div>
+  </div>
+  <div class="scr-foot">
+    <p class="wk-cancelln" data-t="pw.cancel"></p>
+    <button class="wk-white" id="payCta" data-t="cont"></button>
+    <p class="wk-legal" data-th="pw.legal"></p>
+  </div>
+</section>
+
+<!-- OFFER ON CLOSE -->
+<section class="scr scr--offer sheet" data-id="offer">
+  <div class="wk-photo"><img src="img/pay-photo.jpg" alt=""></div>
+  <div class="scr-top" style="padding-top:0">
+    <p class="wk-okick" data-t="of.k"></p>
+    <h2 class="wk-oh" data-th="of.h"></h2>
+  </div>
+  <div class="scr-body">
+    <div class="wk-tl">
+      <div class="wk-ti"><span class="dot"><svg viewBox="0 0 24 24"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg></span><b data-t="of.t1"></b><p id="ofD1"></p></div>
+      <div class="wk-ti"><span class="dot"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg></span><b data-t="of.t2"></b><p data-t="of.d2"></p></div>
+      <div class="wk-ti"><span class="dot"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></span><b data-t="of.t3"></b><p data-t="of.d3"></p></div>
+    </div>
+    <div class="wk-osum"><b data-t="of.sum"></b><span>€39.99</span></div>
+    <div style="height:8px"></div>
+  </div>
+  <div class="scr-foot">
+    <button class="wk-white" id="offerCta" data-t="of.cta"></button>
+    <button class="wk-ghost" id="offSkip" data-t="of.skip"></button>
+  </div>
+</section>
+
+<!-- SIGN-IN, AFTER THE PAYWALL -->
+<section class="scr" data-id="account">
+  <div class="wk-scene"></div><div class="wk-dim"></div>
+  <div class="scr-top">
+    <h2 class="wk-h" style="margin-top:40px" id="acH"></h2>
+    <p class="wk-sub" data-t="ac.sub"></p>
+  </div>
+  <div class="scr-body">
+    <div class="wk-sbtns">
+      <button class="wk-sb fb" data-go="notify"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#fff"/><path d="M13.4 21v-7h2.3l.4-2.7h-2.7V9.6c0-.8.3-1.3 1.4-1.3h1.4V5.9c-.3 0-1.1-.1-2-.1-2 0-3.4 1.2-3.4 3.5v2h-2.3V14h2.3v7z" fill="#4267B2"/></svg><span data-t="ac.fb"></span></button>
+      <button class="wk-sb ap" data-go="notify"><svg viewBox="0 0 24 24"><path d="M16.4 12.6c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.9-3.5.9-.7 0-1.8-.8-3-.8-1.6 0-3 .9-3.8 2.3-1.6 2.8-.4 6.9 1.2 9.1.8 1.1 1.7 2.3 2.8 2.3 1.1 0 1.6-.7 3-.7s1.8.7 3 .7 2-1.1 2.7-2.2c.9-1.3 1.2-2.5 1.2-2.6 0 0-2.3-.9-2.3-3.7zM14.2 5.8c.6-.8 1-1.8.9-2.8-.9 0-2 .6-2.6 1.4-.6.7-1.1 1.7-.9 2.7 1 .1 2-.5 2.6-1.3z"/></svg><span data-t="ac.ap"></span></button>
+      <button class="wk-sb gg" data-go="notify"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#fff"/><path d="M18.6 12.2c0-.5 0-.9-.1-1.3H12v2.5h3.7a3.2 3.2 0 0 1-1.4 2.1v1.7h2.3c1.3-1.2 2-3 2-5z" fill="#4285F4"/><path d="M12 19c1.9 0 3.5-.6 4.6-1.7l-2.3-1.7c-.6.4-1.4.7-2.3.7-1.8 0-3.3-1.2-3.8-2.8H5.8v1.8A7 7 0 0 0 12 19z" fill="#34A853"/><path d="M8.2 13.5a4.2 4.2 0 0 1 0-2.9V8.8H5.8a7 7 0 0 0 0 6.4z" fill="#FBBC05"/><path d="M12 7.8c1 0 1.9.4 2.6 1l2-2A7 7 0 0 0 5.8 8.8l2.4 1.8C8.7 9 10.2 7.8 12 7.8z" fill="#EA4335"/></svg><span data-t="ac.gg"></span></button>
+      <button class="wk-sb ph" data-go="notify"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="3" fill="#fff"/><circle cx="12" cy="9.5" r="3" fill="#AB5268"/><path d="M6 17.5c.8-2.6 3.2-4 6-4s5.2 1.4 6 4z" fill="#AB5268"/></svg><span data-t="ac.ph"></span></button>
+    </div>
+  </div>
+  <div class="scr-foot"></div>
+</section>
+
+<!-- NOTIFICATIONS, AFTER THE PAYWALL -->
+<section class="scr" data-id="notify">
+  <div class="wk-scene"></div><div class="wk-dim"></div>
+  <div class="scr-top"></div>
+  <div class="scr-body">
+    <div class="wk-bell"><svg viewBox="0 0 24 24"><path d="M12 22a2.5 2.5 0 0 0 2.5-2.5h-5A2.5 2.5 0 0 0 12 22zm7-6V11a7 7 0 0 0-5.5-6.8V3.5a1.5 1.5 0 0 0-3 0v.7A7 7 0 0 0 5 11v5l-2 2v1h18v-1z"/></svg></div>
+    <h2 class="wk-h" data-th="nt.h"></h2>
+    <p class="wk-sub" data-t="nt.sub"></p>
+    <div class="wk-ntf"><img src="img/icon.png" alt=""><div><b>Wakie</b><span id="ntEx"></span></div></div>
+  </div>
+  <div class="scr-foot">
+    <button class="wk-btn" id="ntOn" data-t="nt.cta"></button>
+    <button class="wk-ghost" id="ntNo" data-t="nt.no"></button>
+  </div>
+  <div class="wk-sys" id="sys">
+    <div class="wk-sysc"><h4 data-t="sys.h"></h4><p data-t="sys.p"></p>
+      <div class="wk-sysb"><button id="sysNo" data-t="sys.no"></button><button id="sysOk" data-t="sys.ok"></button></div></div>
+  </div>
+</section>
+
+        </div>
+      </div>
+    </div>
+    <div class="demo-cap hidden" id="demoCap"><div class="bar"><i id="demoProg"></i></div><p id="demoTxt"></p><button id="demoStop">Stop</button></div>
+    <div class="chips" id="chips"></div>
+    <p class="chiphint">Jump to any screen — answers already filled in.</p>
+    <div class="qr"><img src="img/qr.svg" alt="QR code for this prototype"><span><b>Open it on your phone</b>Scan to try the flow in your hand.</span></div>
+  </div>
+  <div class="panelcol"><div class="pn" id="panel"></div></div>
+</div>
+</div><!-- /view-proto -->
+
+<script>
+/* ================= copy, per language (phone screens only) ================= */
+var LANGS = ['en','ru','ar'];
+var T = {
+ 'wel.h':  ["Welcome to Wakie!","Добро пожаловать в Wakie!","مرحبًا بك في Wakie!"],
+ 'wel.sub':["A place to talk, listen, help, learn, and joke around with people all over the world","Место, где можно говорить, слушать, помогать, учиться и шутить с людьми со всего мира","مكان للتحدث والاستماع والمساعدة والتعلّم والمزاح مع أشخاص من كل أنحاء العالم"],
+ 'wel.cta':["Get started","Начать","ابدأ"],
+ 'wel.have':["I have an account","У меня есть аккаунт","لدي حساب"],
+ 'ru.h':   ["It's good to have<br>you with us!","Рады, что вы<br>с нами!","سعداء بانضمامك<br>إلينا!"],
+ 'ru.p':   ["Wakie is a friendly and safe community of people from over 100 countries. Before you join us, please accept the community rules:","Wakie — дружелюбное и безопасное сообщество людей из более чем 100 стран. Прежде чем присоединиться, примите правила сообщества:","Wakie مجتمع ودود وآمن لأشخاص من أكثر من 100 دولة. قبل أن تنضم إلينا، يرجى قبول قواعد المجتمع:"],
+ 'ru.1':   ["1. I am going to be respectful to all members","1. Я буду уважительно относиться ко всем участникам","1. سأحترم جميع الأعضاء"],
+ 'ru.2':   ["2. I agree with <u>Terms of service</u> and <u>Privacy Policy</u>","2. Я согласен(на) с <u>Условиями использования</u> и <u>Политикой конфиденциальности</u>","2. أوافق على <u>شروط الخدمة</u> و<u>سياسة الخصوصية</u>"],
+ 'ru.ok':  ["Accept","Принять","قبول"],
+ 'ru.no':  ["Cancel","Отмена","إلغاء"],
+ 'tk.h':   ["What brings you<br><em>to Wakie?</em>","Зачем вы<br><em>пришли в Wakie?</em>","ما الذي يأتي بك<br><em>إلى Wakie؟</em>"],
+ 'tk.sub': ["Pick all that fit — we'll set things up around it.","Выберите всё, что подходит, — мы всё настроим.","اختر كل ما يناسبك، وسنجهّز كل شيء على أساسه."],
+ 'cont':   ["Continue","Продолжить","متابعة"],
+ 'g.h':    ["Select your<br><em>gender</em>","Выберите<br><em>пол</em>","اختر<br><em>جنسك</em>"],
+ 'g.m':    ["Male","Мужской","ذكر"], 'g.f':["Female","Женский","أنثى"],
+ 'n.h':    ["Introduce yourself to<br><em>our friendly community!</em>","Представьтесь<br><em>нашему дружному сообществу!</em>","عرّف بنفسك<br><em>لمجتمعنا الودود!</em>"],
+ 'ld.h1':  ["You're almost all set.","Почти всё готово.","أوشكت على الانتهاء."],
+ 'ld.h2':  ["Personalizing Wakie for you...","Настраиваем Wakie под вас...","نخصّص Wakie لك..."],
+ 'ld.p':   ["Setting up {n}'s profile","Создаём профиль: {n}","نُعدّ ملف {n}"],
+ 'ld.c':   ["Picking clubs: {x}","Подбираем клубы: {x}","نختار الأندية: {x}"],
+ 'ld.t':   ["Lining up topics for {x}","Подбираем темы: {x}","نجهّز المواضيع: {x}"],
+ 'and':    [" and "," и "," و"],
+ 'po.h':   ["{n}, here's<br><em>where to start</em>","{n}, вот<br><em>с чего начать</em>","{n}، إليك<br><em>من أين تبدأ</em>"],
+ 'po.clubs':["Clubs to try first","Клубы для начала","أندية لتبدأ بها"],
+ 'po.join':["Join","Вступить","انضم"],
+ 'po.proof':["10,000,000+ members · 4.5 ★ on the App Store","10 000 000+ участников · 4,5 ★ в App Store","أكثر من 10,000,000 عضو · 4.5 ★ على App Store"],
+ 'pw.sub': ["Join 10 million Wakie members!","Присоединяйтесь к 10 миллионам участников Wakie!","انضم إلى 10 ملايين عضو في Wakie!"],
+ 'pw.proof':["<b>★ 4.5</b> from 19K App Store ratings","<b>★ 4,5</b> — 19 тыс. оценок в App Store","<b>★ 4.5</b> من 19 ألف تقييم على App Store"],
+ 'pw.tOff':["Still in doubt? Try it for free","Сомневаетесь? Попробуйте бесплатно","متردد؟ جرّبه مجانًا"],
+ 'pw.tOn': ["Free trial activated","Пробный период включён","تم تفعيل التجربة المجانية"],
+ 'pw.half':["6 months","6 месяцев","6 أشهر"],
+ 'pw.week':["Week","Неделя","أسبوع"],
+ 'pw.trial3':["3 days free trial","3 дня бесплатно","تجربة مجانية 3 أيام"],
+ 'pw.halfP':["€39.99 (€1.7 / week)","€39.99 (€1.7 / нед.)","€39.99 (€1.7 / أسبوع)"],
+ 'pw.sale':["Sale 60%","Скидка 60%","خصم 60%"],
+ 'pw.cancel':["You can cancel your subscription anytime.","Подписку можно отменить в любой момент.","يمكنك إلغاء اشتراكك في أي وقت."],
+ 'pw.legal':["<b>Terms of Service</b> and <b>Privacy Policy</b>.","<b>Условия использования</b> и <b>Политика конфиденциальности</b>.","<b>شروط الخدمة</b> و<b>سياسة الخصوصية</b>."],
+ 'pw.hNone':["Choose Your Plan","Выберите план","اختر خطتك"],
+ 'of.k':   ["Once you close this, the free trial is gone","Если закроете — пробный период пропадёт","إذا أغلقت هذه الصفحة، ستفقد التجربة المجانية"],
+ 'of.h':   ["Try Wakie Plus<br>free for 3 days","Wakie Plus —<br>3 дня бесплатно","جرّب Wakie Plus<br>مجانًا لمدة 3 أيام"],
+ 'of.t1':  ["Today","Сегодня","اليوم"],
+ 'of.d1':  ["{f} — and everything else in Wakie Plus. Nothing to pay.","{f} — и всё остальное в Wakie Plus. Платить ничего не нужно.","{f} — وكل ما في Wakie Plus. لا شيء تدفعه."],
+ 'of.t2':  ["Day 3","День 3","اليوم 3"],
+ 'of.d2':  ["Your 6-month plan starts at €39.99, unless you cancel before.","Начинается план на 6 месяцев за €39.99, если вы не отмените его раньше.","تبدأ خطة 6 أشهر بسعر €39.99، ما لم تُلغِها قبل ذلك."],
+ 'of.t3':  ["Anytime","В любой момент","في أي وقت"],
+ 'of.d3':  ["Cancel in your App Store subscriptions.","Отмена — в подписках App Store.","ألغِ من اشتراكات App Store."],
+ 'of.sum': ["3 days free, then 6 months","3 дня бесплатно, затем 6 месяцев","3 أيام مجانًا، ثم 6 أشهر"],
+ 'of.cta': ["Start my 3 free days","Начать 3 бесплатных дня","ابدأ أيامي الثلاثة المجانية"],
+ 'of.skip':["Skip offer","Пропустить предложение","تخطي العرض"],
+ 'ac.h':   ["Save your profile,<br><em>{n}</em>","Сохраните профиль,<br><em>{n}</em>","احفظ ملفك،<br><em>{n}</em>"],
+ 'ac.sub': ["Your name, your clubs and Wakie Plus stay with your account.","Имя, клубы и Wakie Plus останутся в вашем аккаунте.","يبقى اسمك وأنديتك وWakie Plus مع حسابك."],
+ 'ac.fb':  ["Continue with Facebook","Продолжить с Facebook","المتابعة عبر Facebook"],
+ 'ac.ap':  ["Continue with Apple","Продолжить с Apple","المتابعة عبر Apple"],
+ 'ac.gg':  ["Continue with Google","Продолжить с Google","المتابعة عبر Google"],
+ 'ac.ph':  ["Continue with phone","Продолжить по номеру","المتابعة برقم الهاتف"],
+ 'nt.h':   ["Know when someone<br><em>says “Let's talk”</em>","Узнайте, когда кто-то<br><em>скажет «Давай поговорим»</em>","اعرف متى يقول أحدهم<br><em>«لنتحدث»</em>"],
+ 'nt.sub': ["Get a heads-up when someone accepts your request, reacts to your topic or starts something in your clubs.","Узнавайте, когда кто-то принял ваш запрос, отреагировал на тему или что-то происходит в ваших клубах.","اعرف عندما يقبل أحدهم طلبك أو يتفاعل مع موضوعك أو يبدأ شيئًا في أنديتك."],
+ 'nt.ex':  ["Someone accepted your “Let's talk” request","Кто-то принял ваш запрос «Давай поговорим»","قبل أحدهم طلبك «لنتحدث»"],
+ 'nt.cta': ["Turn on notifications","Включить уведомления","تفعيل الإشعارات"],
+ 'nt.no':  ["Not now","Не сейчас","ليس الآن"],
+ 'nt.in':  ["Into Wakie","В Wakie","إلى Wakie"],
+ 'sys.h':  ["“Wakie” Would Like to Send You Notifications","Приложение «Wakie» запрашивает разрешение на отправку уведомлений","يرغب ”Wakie“ في إرسال إشعارات إليك"],
+ 'sys.p':  ["Notifications may include alerts, sounds, and icon badges. These can be configured in Settings.","Уведомления могут содержать предупреждения, звуки и наклейки на значках. Их можно настроить в Настройках.","قد تتضمن الإشعارات تنبيهات وأصوات وشارات أيقونات. يمكن تكوينها في الإعدادات."],
+ 'sys.no': ["Don't Allow","Не разрешать","عدم السماح"],
+ 'sys.ok': ["Allow","Разрешить","سماح"]
+};
+/* what they came for — every option is a line from Wakie's own listings and site */
+var INTENTS = [
+ {k:'mind',    em:'💬', l:["Say what's on my mind","Высказать, что на душе","أن أقول ما في بالي"], s:["what's on your mind","то, что на душе","ما في بالك"], clubs:['life'], lead:'promote', q:'sand',
+   hl:["{n}, get heard by more people","{n}, пусть вас услышит больше людей","{n}، اجعل المزيد من الناس يسمعون ما في بالك"]},
+ {k:'friends', em:'🤝', l:["Make new friends","Найти новых друзей","تكوين صداقات جديدة"], s:["new friends","новых друзей","أصدقاء جدد"], clubs:['life','sing'], lead:'visitors', q:'niya',
+   hl:["{n}, see who's curious about you","{n}, узнайте, кому вы интересны","{n}، اعرف من يهتم بك"]},
+ {k:'language',em:'🌍', l:["Practice a foreign language","Практиковать иностранный язык","ممارسة لغة أجنبية"], s:["language practice","практики языка","ممارسة اللغة"], clubs:['lang'], lead:'promote', q:'lynne',
+   hl:["{n}, get your language topics seen","{n}, больше людей увидят ваши темы","{n}، اجعل مواضيعك اللغوية تصل إلى المزيد"]},
+ {k:'boredom', em:'🎉', l:["Have fun, get rid of boredom","Повеселиться и не скучать","المرح والتخلص من الملل"], s:["having fun","веселья","المرح"], clubs:['tv','gaming','sing'], lead:'badges', q:'lynne',
+   hl:["{n}, stand out with your own badge","{n}, выделяйтесь своим значком и цветами","{n}، تميّز بشارتك وألوانك"]},
+ {k:'advice',  em:'🧭', l:["Get advice from someone new","Получить совет со стороны","الحصول على نصيحة من شخص جديد"], s:["advice","советов","النصيحة"], clubs:['life'], lead:'promote', q:'sand',
+   hl:["{n}, get your question seen by more people","{n}, ваш вопрос увидят больше людей","{n}، اعرض سؤالك على المزيد من الناس"]},
+ {k:'help',    em:'🫶', l:["Listen and help others","Выслушать и помочь другим","الاستماع ومساعدة الآخرين"], s:["helping others","помощи другим","مساعدة الآخرين"], clubs:['life'], lead:'promote', q:'maris',
+   hl:["{n}, get your topic seen by more people","{n}, вашу тему увидят больше людей","{n}، اعرض موضوعك على المزيد من الناس"]}
+];
+var INT = {}; INTENTS.forEach(function(o){ INT[o.k]=o; });
+/* club themes Wakie names on wakie.com and Google Play */
+var CLUBS = {
+ life:  {em:'💬', l:["Talk about life","Разговоры о жизни","الحديث عن الحياة"]},
+ sing:  {em:'🎤', l:["Sing together","Поём вместе","الغناء معًا"]},
+ tv:    {em:'📺', l:["Discuss TV shows","Обсуждаем сериалы","مناقشة المسلسلات"]},
+ lang:  {em:'🌍', l:["Practice languages","Практика языков","ممارسة اللغات"]},
+ gaming:{em:'🎮', l:["Gaming","Игры","الألعاب"]}
+};
+/* Wakie Plus, as listed on Google Play */
+var FEAT = {
+ promote: ["<b>Promote your topics</b> to a broader audience","<b>Продвигайте свои темы</b> на более широкую аудиторию","<b>روّج لمواضيعك</b> لجمهور أوسع"],
+ visitors:["<b>See who visited</b> your profile","<b>Смотрите, кто заходил</b> в ваш профиль","<b>اعرف من زار</b> ملفك"],
+ badges:  ["<b>Exclusive badges</b> and background colours","<b>Эксклюзивные значки</b> и цвета фона","<b>شارات حصرية</b> وألوان خلفية"],
+ past:    ["<b>Revisit your past topics</b> with ease","<b>Возвращайтесь к прошлым темам</b> без труда","<b>ارجع إلى مواضيعك السابقة</b> بسهولة"]
+};
+var FEAT_ORDER = ['promote','visitors','badges','past'];
+var FEAT_SHORT = {promote:["Promoted topics","Продвижение тем","ترويج المواضيع"],visitors:["Profile visitors","Гости профиля","زوار الملف"],badges:["Exclusive badges","Эксклюзивные значки","شارات حصرية"],past:["Past topics","Прошлые темы","المواضيع السابقة"]};
+/* reviews, verbatim, from wakie.com and the App Store listing */
+var QUOTES = {
+ niya: ["Here I found some true gems of my life and have them in my real life. It's a place where you could express what you really are and understand others also 🌟","Niya · App Store review"],
+ sand: ["Sometimes, it's easier to talk about certain things that bother you, with strangers than your closest friends. And Wakie has some of the kindest strangers you'll ever meet","Sandman/Dream · Google Play review"],
+ maris:["I love Wakie app because I can reach out and help others that are hurting like me. That heals me 🙌","Maris Perish · App Store review"],
+ lynne:["I love that you can talk to people from all over the world! It’s amazing :)","Lynne0331 · App Store review"]
+};
+
+/* ================= state ================= */
+var S0 = {lang:'en', theme:'dark'};
+function defaults(){ return { lang:S0.lang, theme:S0.theme, intents:['friends','mind'], gender:'female', name:'Sam', trial:false, plan:'half' }; }
+var S = defaults();
+function L(){ return LANGS.indexOf(S.lang); }
+function t(k,v){ var s=(T[k]||[k])[L()]; if(v) Object.keys(v).forEach(function(x){ s=s.split('{'+x+'}').join(v[x]); }); return s; }
+function esc(s){ return String(s).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+function nm(){ var n=(S.name||'').trim(); return n || (['You','Вы','أنت'][L()]); }
+function joinL(a){ return a.length<2 ? (a[0]||'') : a.slice(0,-1).join(', ')+t('and')+a[a.length-1]; }
+function picked(){ return INTENTS.filter(function(o){ return S.intents.indexOf(o.k)>-1; }); }
+function primary(){ return picked()[0]; }
+function clubKeys(){ var out=[]; picked().forEach(function(o){ o.clubs.forEach(function(c){ if(out.indexOf(c)<0) out.push(c); }); }); return out.slice(0,3); }
+function featOrder(){ var p=primary(), o=FEAT_ORDER.slice(); if(p){ o.splice(o.indexOf(p.lead),1); o.unshift(p.lead); } return o; }
+
+/* ================= marks ================= */
+(function(){ var h=''; for(var i=0;i<8;i++){ h+='<rect x="11" y="2" width="2.4" height="6" rx="1.2" fill="#fff" opacity="'+(0.25+i*0.1).toFixed(2)+'" transform="rotate('+(i*45)+' 12.2 12)"/>'; }
+  document.getElementById('spin').innerHTML=h; })();
+
+/* ================= builders (re-run on language change) ================= */
+var ck='<span class="wk-ck"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>';
+function buildTalk(){ var g=document.getElementById('talkList'); g.innerHTML='';
+  INTENTS.forEach(function(o){ var b=document.createElement('button'); b.className='wk-row'; b.dataset.v=o.k;
+    b.innerHTML='<span class="em">'+o.em+'</span><span class="l">'+o.l[L()]+'</span>'+ck;
+    b.addEventListener('click',function(){ var i=S.intents.indexOf(o.k); if(i>-1) S.intents.splice(i,1); else S.intents.push(o.k); syncScreen(); });
+    g.appendChild(b); }); }
+function applyStatic(){
+  var pi=document.getElementById('phoneIn'); pi.setAttribute('dir', S.lang==='ar'?'rtl':'ltr'); pi.setAttribute('lang',S.lang);
+  document.querySelectorAll('[data-t]').forEach(function(el){ el.textContent=t(el.dataset.t); });
+  document.querySelectorAll('[data-th]').forEach(function(el){ el.innerHTML=t(el.dataset.th); });
+  buildTalk();
+}
+
+/* ================= everything downstream reads S ================= */
+function syncScreen(){
+  var li=L(), n=esc(nm()), init=n.charAt(0).toUpperCase();
+  document.querySelectorAll('#talkList .wk-row').forEach(function(b){ b.classList.toggle('on', S.intents.indexOf(b.dataset.v)>-1); });
+  document.getElementById('talkBtn').disabled=!S.intents.length;
+  document.querySelectorAll('.wk-g').forEach(function(b){ b.classList.toggle('on', b.dataset.g===S.gender); });
+  var ni=document.getElementById('nameIn'); if(document.activeElement!==ni) ni.value=S.name;
+  document.getElementById('avInit').textContent=init;
+  document.getElementById('nameBtn').disabled=!(S.name||'').trim();
+
+  var p=picked(), ck_=clubKeys(), q=QUOTES[(primary()||INT.friends).q];
+  var st=document.querySelectorAll('#ldSteps .wk-st .t');
+  st[0].textContent=t('ld.p',{n:nm()});
+  st[1].textContent=t('ld.c',{x:joinL(ck_.map(function(c){ return CLUBS[c].l[li]; }))});
+  st[2].textContent=t('ld.t',{x:joinL(p.map(function(o){ return o.s[li]; }))});
+  document.getElementById('ldQ').textContent='“'+q[0]+'”'; document.getElementById('ldW').textContent='— '+q[1];
+
+  document.getElementById('poH').innerHTML=t('po.h',{n:n});
+  document.getElementById('poAv').textContent=init;
+  document.getElementById('poName').textContent=nm();
+  document.getElementById('poTags').innerHTML=p.map(function(o){ return '<span class="wk-tag">'+o.em+' '+o.l[li]+'</span>'; }).join('');
+  document.getElementById('poClubs').innerHTML=ck_.map(function(c){ return '<div class="wk-club"><span class="i">'+CLUBS[c].em+'</span><b>'+CLUBS[c].l[li]+'</b><span>'+t('po.join')+'</span></div>'; }).join('');
+  document.getElementById('poQ').textContent='“'+q[0]+'”'; document.getElementById('poW').textContent='— '+q[1];
+
+  var pr=primary();
+  document.getElementById('payH').textContent = pr ? pr.hl[li].split('{n}').join(nm()) : t('pw.hNone');
+  document.getElementById('featList').innerHTML=featOrder().map(function(k){ return '<div class="wk-f"><span class="c"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><span>'+FEAT[k][li]+'</span></div>'; }).join('');
+  var tg=document.getElementById('tgl'); tg.classList.toggle('on',S.trial);
+  document.getElementById('tglL').textContent = S.trial ? t('pw.tOn') : t('pw.tOff');
+  document.getElementById('halfT').innerHTML = S.trial ? t('pw.trial3')+'<small>'+t('pw.half')+'</small>' : t('pw.half');
+  document.getElementById('halfP').textContent=t('pw.halfP');
+  document.querySelectorAll('.wk-plan').forEach(function(b){ b.classList.toggle('on', b.dataset.v===S.plan); });
+
+  document.getElementById('ofD1').textContent=t('of.d1',{f:FEAT_SHORT[featOrder()[0]][li]});
+  document.getElementById('acH').innerHTML=t('ac.h',{n:n});
+  document.getElementById('ntEx').textContent=t('nt.ex');
+}
+
+/* ================= router ================= */
+var ORDER=['welcome','rules','talk','gender','name','loader','payoff','paywall','offer','account','notify'];
+var LABEL={welcome:'Welcome',rules:'Community rules',talk:'What brings you',gender:'Gender',name:'Name',loader:'Loader',payoff:'Payoff',paywall:'Paywall',offer:'Offer on close',account:'Sign in',notify:'Notifications'};
+var scr={}, hist=[], cur='welcome', loadTimers=[];
+document.querySelectorAll('.scr').forEach(function(s){ scr[s.dataset.id]=s; });
+
+function chrome(){ var dk=S.theme==='light' && cur!=='welcome';
+  document.getElementById('sbar').classList.toggle('dk',dk); document.getElementById('homebar').classList.toggle('dk',dk); }
+function enter(id){ chrome(); paintChips(); paintPanel(); clearLoad(); document.getElementById('sys').classList.remove('on');
+  if(id==='loader') runLoader(); }
+function go(id,opts){
+  opts=opts||{}; if(id===cur) return;
+  var from=scr[cur], to=scr[id], sheet=to.classList.contains('sheet');
+  if(!opts.back) hist.push(cur);
+  Object.keys(scr).forEach(function(k){ if(k!==id && !(sheet && k===cur)) scr[k].classList.remove('is-active'); });
+  if(!sheet && !from.classList.contains('sheet')) from.classList.add('is-past');
+  to.classList.remove('is-past'); to.classList.add('is-active');
+  cur=id; enter(id);
+}
+function back(){
+  if(!hist.length) return;
+  var prev=hist.pop();
+  scr[cur].classList.remove('is-active');
+  scr[prev].classList.remove('is-past'); scr[prev].classList.add('is-active');
+  cur=prev; enter(prev);
+}
+function jump(id){
+  var i=ORDER.indexOf(id);
+  Object.keys(scr).forEach(function(k){ scr[k].classList.add('nofx'); scr[k].classList.remove('is-active','is-past'); });
+  hist=ORDER.slice(0,i<0?0:i);
+  if(id==='offer') scr.paywall.classList.add('is-active');
+  scr[id].classList.add('is-active'); cur=id;
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){
+    Object.keys(scr).forEach(function(k){ scr[k].classList.remove('nofx'); }); }); });
+  syncScreen(); enter(id);
+}
+function paintChips(){
+  var c=document.getElementById('chips');
+  if(!c.children.length){
+    ORDER.forEach(function(id){
+      var b=document.createElement('button'); b.className='chip'+(id==='offer'?' offer':''); b.textContent=LABEL[id];
+      b.dataset.id=id; b.onclick=function(){ stopDemo(); jump(id); }; c.appendChild(b);
+    });
+  }
+  c.querySelectorAll('.chip').forEach(function(b){ b.classList.toggle('on', b.dataset.id===cur); });
+}
+function clearLoad(){ loadTimers.forEach(clearTimeout); loadTimers=[]; }
+function runLoader(){
+  var k=demo.on?0.48:1, steps=document.querySelectorAll('#ldSteps .wk-st');
+  steps.forEach(function(s){ s.classList.remove('on'); });
+  steps.forEach(function(s,i){ loadTimers.push(setTimeout(function(){ s.classList.add('on'); },(700+i*1100)*k)); });
+  loadTimers.push(setTimeout(function(){ if(cur==='loader') go('payoff'); },5000*k));
+}
+
+/* ================= wiring ================= */
+document.querySelectorAll('[data-go]').forEach(function(b){ b.addEventListener('click',function(){ if(!b.disabled) go(b.dataset.go); }); });
+document.querySelectorAll('[data-back]').forEach(function(b){ b.addEventListener('click',back); });
+document.querySelectorAll('.wk-g').forEach(function(b){ b.addEventListener('click',function(){ S.gender=b.dataset.g; syncScreen();
+  setTimeout(function(){ if(cur==='gender') go('name'); },320); }); });
+document.getElementById('nameIn').addEventListener('input',function(e){ S.name=e.target.value; syncScreen(); });
+document.querySelectorAll('.wk-plan').forEach(function(b){ b.addEventListener('click',function(){ S.plan=b.dataset.v; syncScreen(); }); });
+document.getElementById('tgl').addEventListener('click',function(){ S.trial=!S.trial; S.plan='half'; syncScreen(); });
+document.getElementById('payClose').addEventListener('click',function(){ go('offer'); });
+document.getElementById('payCta').addEventListener('click',function(){ go('account'); });
+document.getElementById('offerCta').addEventListener('click',function(){ go('account'); });
+document.getElementById('offSkip').addEventListener('click',function(){ go('account'); });
+document.getElementById('ntOn').addEventListener('click',function(){ if(this.dataset.done){ jump('welcome'); return; } document.getElementById('sys').classList.add('on'); });
+document.getElementById('ntNo').addEventListener('click',function(){ jump('welcome'); });
+function sysDone(){ document.getElementById('sys').classList.remove('on'); var b=document.getElementById('ntOn'); b.dataset.done='1'; b.textContent=t('nt.in'); }
+document.getElementById('sysOk').addEventListener('click',sysDone);
+document.getElementById('sysNo').addEventListener('click',sysDone);
+
+function setSeg(id,attr,val){ document.querySelectorAll('#'+id+' button').forEach(function(b){ b.classList.toggle('on', b.dataset[attr]===val); }); }
+function setLang(l){ S.lang=l; S0.lang=l; setSeg('segLang','lang',l); applyStatic(); delete document.getElementById('ntOn').dataset.done; syncScreen(); paintPanel(); }
+function setTheme(th){ S.theme=th; S0.theme=th; document.getElementById('phoneIn').classList.toggle('light',th==='light'); setSeg('segTheme','theme',th); chrome(); }
+document.querySelectorAll('#segLang button').forEach(function(b){ b.addEventListener('click',function(){ stopDemo(); setLang(b.dataset.lang); }); });
+document.querySelectorAll('#segTheme button').forEach(function(b){ b.addEventListener('click',function(){ setTheme(b.dataset.theme); }); });
+
+/* ================= the 30-second walkthrough ================= */
+var demo={tok:0,on:false,t0:0,iv:null}, finger=document.getElementById('finger'), phoneIn=document.getElementById('phoneIn');
+function W(ms){ return new Promise(function(r){ setTimeout(r,ms); }); }
+function cap(txt){ document.getElementById('demoTxt').textContent=txt; }
+async function tap(sel,tok){
+  if(demo.tok!==tok) throw 0;
+  var el=document.querySelector(sel); if(!el) return;
+  var r=el.getBoundingClientRect(), p=phoneIn.getBoundingClientRect(), z=p.width/phoneIn.offsetWidth||1;
+  finger.style.left=((r.left-p.left+r.width/2)/z)+'px'; finger.style.top=((r.top-p.top+r.height/2)/z)+'px';
+  finger.classList.add('show'); await W(380); if(demo.tok!==tok) throw 0;
+  finger.classList.add('press'); await W(120); finger.classList.remove('press'); el.click(); await W(160);
+  if(demo.tok!==tok) throw 0;
+}
+async function pause(ms,tok){ await W(ms); if(demo.tok!==tok) throw 0; }
+function startDemo(){
+  stopDemo(); var tok=++demo.tok; demo.on=true; demo.t0=Date.now();
+  var keep={lang:S.lang,theme:S.theme}; S=defaults(); S.lang=keep.lang; S.theme=keep.theme; S.intents=[];
+  applyStatic(); jump('welcome');
+  document.getElementById('demoCap').classList.remove('hidden');
+  demo.iv=setInterval(function(){ document.getElementById('demoProg').style.width=Math.min(100,(Date.now()-demo.t0)/290)+'%'; },200);
+  (async function(){
+    try{
+      cap('A new install opens on your welcome screen. No permission prompts, no sign-in buttons yet.'); await pause(1500,tok);
+      await tap('[data-id=welcome] .wk-btn',tok);
+      cap('Your community rules, unchanged.'); await pause(600,tok);
+      await tap('#rulesOk',tok);
+      cap('One new question, in words from your own listing.'); await pause(600,tok);
+      await tap('#talkList [data-v=language]',tok); await pause(350,tok); await tap('#talkBtn',tok);
+      cap('Your gender circles and your name screen, as they are.'); await pause(500,tok);
+      await tap('.wk-g[data-g=female]',tok); await pause(650,tok);
+      await tap('#nameBtn',tok);
+      cap('“Personalizing Wakie for you” now names what it is doing.'); await pause(2500,tok);
+      cap('The payoff: their profile, clubs for what they came for, a review from someone like them.'); await pause(1500,tok);
+      await tap('[data-id=payoff] .wk-btn',tok);
+      cap('The paywall says what Wakie Plus does, led by their answer: language practice.'); await pause(1700,tok);
+      await tap('.wk-plan[data-v=week]',tok); await pause(500,tok); await tap('.wk-plan[data-v=half]',tok); await pause(400,tok);
+      cap('They close it. The iOS alert becomes a real screen with the price on it.'); await tap('#payClose',tok); await pause(2300,tok);
+      cap('That is the flow. Sign-in and notifications now come after this — use the chips below.');
+      finger.classList.remove('show'); await pause(2400,tok); stopDemo();
+    }catch(e){}
+  })();
+}
+function stopDemo(){ if(!demo.on) return; demo.tok++; demo.on=false; clearInterval(demo.iv); finger.classList.remove('show','press');
+  document.getElementById('demoCap').classList.add('hidden'); }
+document.getElementById('demoBtn').addEventListener('click',startDemo);
+document.getElementById('demoStop').addEventListener('click',stopDemo);
+phoneIn.addEventListener('pointerdown',function(e){ if(e.isTrusted && demo.on) stopDemo(); });
+</script>
+<script>
+/* ---- the short panel: hypothesis + potential outcome, nothing else ---- */
+var PANEL = {
+welcome:{n:5,t:'Let people in before the sign-in buttons',
+ hyp:'Try opening on Get started and a quiet “I have an account”, <b>because today Facebook, Apple, Google and phone are the first real screen — an account before anyone has seen a reason to make one</b>.',
+ n2:4, out2:'CR +10–15%',
+ hyp2:'The notification prompt no longer fires before this screen, <b>because a new install has nothing to be notified about yet</b>. It moves past the paywall. The tracking prompt stays at launch, where your Meta campaigns need it.',
+ kept:'Your night-city scene, “Welcome to Wakie!” and its line, your orange pill and the underlined “I have an account”.',
+ out:'CR +8% · ARPU +17%'},
+rules:{ctx:true,t:'Community rules',
+ kept:'Untouched — the card, both rules, Accept and Cancel. It stays early on purpose: it sets the tone for a community app.'},
+talk:{n:3,t:'Make “Personalizing Wakie for you” personal',
+ hyp:'Try one question before gender and name, <b>because the loader promises personalization and today nothing is asked that it could use</b>. Every option is a line from your App Store, Google Play or website copy.',
+ kept:'Your dimmed scene, white-and-orange two-line heading, field surface and orange pill.',
+ out:'CR +10–20%'},
+gender:{ctx:true,t:'Select your gender',
+ kept:'Untouched — your two circles with the radio dot, and the tap that moves straight on.'},
+name:{ctx:true,t:'Introduce yourself',
+ kept:'Untouched — the pink initial avatar, the pencil badge and the name field. The name is now used on the next four screens.'},
+loader:{n:3,t:'Make “Personalizing Wakie for you” personal',
+ hyp:'Try naming their answers back while it loads, <b>because a loader only pays off when something personal comes after it</b>. The review changes with what they came for, and every one is quoted from your own site or store page.',
+ kept:'Your heading, your orange second line and the spinner tile.',
+ out:'CR +10–20%'},
+payoff:{n:3,t:'Make “Personalizing Wakie for you” personal',
+ hyp:'Try a “here’s where to start” screen before the price, <b>because their name, the clubs that match what they came for and a review from someone like them are things Wakie really has</b>. Go back and pick “Practice a foreign language” — the clubs and the review change.',
+ kept:'Your avatar, field surfaces and orange accents. The club themes are the ones wakie.com and Google Play name. The member count and rating are your own.',
+ out:'CR +10–20%'},
+paywall:{n:2,t:'Say what Wakie Plus does on the paywall',
+ hyp:'Try listing the four Wakie Plus features from your Google Play page, led by the one that fits their answer, with their name in the headline, <b>because today “Choose Your Plan” shows two prices and no reason to pay either</b>. Your 4.5 from 19K ratings sits just above the plans.',
+ kept:'Your photo, black canvas, “Join 10 million Wakie members!”, the trial toggle, both plan cards with the orange glow, the Sale 60% badge, “You can cancel your subscription anytime” and the white Continue.',
+ out:'CR +15–20%'},
+offer:{n:1,t:'Turn the close alert into a real offer',
+ hyp:'Try showing the trial as a timeline on a full screen when they close the paywall, <b>because today the same offer arrives as a grey iOS alert with no price, no plan and no reason</b>. Same 3 free days, same €39.99 six-month plan — nothing here is invented.',
+ kept:'Your own line “Once you close this, the free trial is gone”, your Skip offer wording, the photo, the orange-glow plan card and the white button.',
+ out:'ARPU +10–15%'},
+account:{n:5,t:'Let people in before the sign-in buttons',
+ hyp:'Try asking for the account here, <b>because by now they have a name, clubs and maybe Wakie Plus to keep — a reason to sign in that the first screen never had</b>.',
+ kept:'Your four buttons exactly — Facebook, Apple, Google and phone, in your colours and order.',
+ out:'CR +8% · ARPU +17%'},
+notify:{n:4,t:'Ask for notifications when they mean something',
+ hyp:'Try one screen that says what notifications are for, then the system prompt, <b>because today it fires on screen two, when there is nobody to hear from yet</b>. Requests, topic reactions and club activity are the pushes your own release notes describe.',
+ kept:'The iOS dialog, your scene and your orange pill.',
+ out:'CR +10–15%'}
+};
+
+function outBlock(lab,val){
+  return '<div class="pn-out"><div class="lab">'+lab+'</div><div class="v">'+val+'</div></div>';
+}
+function paintPanel(){
+  var d=PANEL[cur]; if(!d) return;
+  var h='';
+  if(d.ctx){
+    h += '<div class="pn-n ctx">Context · no change proposed</div><h3 class="pn-t">'+d.t+'</h3>'
+       + '<div class="pn-kept">'+d.kept+'</div>';
+  } else {
+    h += '<div class="pn-n">Idea '+d.n+' of 5</div><h3 class="pn-t">'+d.t+'</h3>'
+       + '<p class="pn-hyp">'+d.hyp+'</p>'
+       + outBlock('Potential outcome · based on Adapty data', d.out);
+    if(d.hyp2){
+      h += '<div class="pn-sep"></div>'
+         + '<div class="pn-n">Idea '+d.n2+' of 5</div>'
+         + '<p class="pn-hyp" style="margin-top:12px">'+d.hyp2+'</p>'
+         + outBlock('Potential outcome · based on Adapty data', d.out2);
+    }
+    h += '<div class="pn-kept"><b>Your design, unchanged.</b> '+d.kept+'</div>';
+  }
+  if(S.lang!=='en') h += '<div class="pn-kept"><b>Language.</b> Screens are shown in '+(S.lang==='ru'?'Russian':'Arabic')+', two of the six languages Wakie ships in, translated by us. Store prices stay as published; reviews stay verbatim in English.</div>';
+  if(S.theme==='light') h += '<div class="pn-kept"><b>Light mode.</b> Our approximation — Wakie’s screens are dark in every frame we have.</div>';
+  h += '<div class="pn-foot">Ranges are Adapty’s expected effect from tests across 30,000+ subscription apps — not measured lift for Wakie. '
+     + 'Prices, ratings, reviews and Wakie Plus features come from your own published material.</div>';
+  document.getElementById('panel').innerHTML = h;
+}
+
+/* ---- views, jumps from the overview ---- */
+function showView(v){
+  if(v!=='proto') stopDemo();
+  document.querySelectorAll('.view').forEach(function(x){ x.classList.remove('on'); });
+  document.getElementById('view-'+v).classList.add('on');
+  document.querySelectorAll('.nav-links button[data-view]').forEach(function(b){ b.classList.toggle('on', b.dataset.view===v); });
+  window.scrollTo(0,0);
+}
+document.querySelectorAll('[data-view]').forEach(function(b){ b.addEventListener('click',function(){ showView(b.dataset.view); }); });
+document.querySelectorAll('.idea[data-jump]').forEach(function(b){
+  b.addEventListener('click',function(){ showView('proto'); jump(b.dataset.jump); });
+});
+document.querySelectorAll('[data-demo]').forEach(function(b){ b.addEventListener('click',function(){ showView('proto'); startDemo(); }); });
+
+applyStatic();
+scr.welcome.classList.add('is-active');
+syncScreen(); chrome(); paintChips(); paintPanel();
+if(/[?&]open=proto/.test(location.search)) showView('proto');
+</script>
+</body>
+</html>
